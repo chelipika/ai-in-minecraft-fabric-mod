@@ -5,7 +5,7 @@ You can talk, ask questions, and get detailed responses without leaving the game
 
 ---
 
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/xkabQ-9BooI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+[![Watch the video](https://img.youtube.com/vi/xkabQ-9BooI/0.jpg)](https://www.youtube.com/watch?v=xkabQ-9BooI)
 
 ---
 
