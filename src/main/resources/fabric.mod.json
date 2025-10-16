@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "wikki",
+	"version": "${version}",
+	"name": "wikki",
+	"description": "use gemini in minecraft",
+	"authors": [
+		"Jasur Pi"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/wikki/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.pi.wikki.Wikki"
+		],
+		"fabric-datagen": [
+			"com.pi.wikki.WikkiDataGenerator"
+		],
+        "client": [
+          "com.pi.wikki.WikkiClient"
+        ]
+	},
+	"mixins": [
+		"wikki.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.17.3",
+		"minecraft": "~1.21.10",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
