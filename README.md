@@ -5,6 +5,10 @@ You can talk, ask questions, and get detailed responses without leaving the game
 
 ---
 
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/xkabQ-9BooI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+---
+
 ## ✨ Features
 - 💬 Chat with an in-game AI assistant
 - 🪶 Lightweight client-side mod
