@@ -13,8 +13,6 @@ You can talk, ask questions, and get detailed responses without leaving the game
 - ⚙️ Built for **Fabric 1.21.10**
 
 ---
-<iframe width="1316" height="740" src="https://www.youtube.com/embed/xkabQ-9BooI" title="AI Assistant in Minecraft Overview" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
 
 ## 🧩 Installation
 
