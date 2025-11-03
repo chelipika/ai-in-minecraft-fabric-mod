@@ -12,7 +12,7 @@ import static com.pi.wikki.Wikki.LOGGER;
 public class gemini_generation {
 
     // The specific model we want to use. gemini-1.5-flash is fast and cost-effective.
-    private static final String MODEL_ID = "gemini-2.5-flash";
+    private static final String MODEL_ID = GeminiConfigManager.loadModelName();
     private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/" + MODEL_ID + ":generateContent";
 
     // Create a single reusable HttpClient.
@@ -68,8 +68,7 @@ public class gemini_generation {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(API_URL))
                     .header("Content-Type", "application/json")
-                    .header("x-goog-api-key", apiKey) // This is correct
-                    // DELETE the custom header line. The instructions are now in the JSON.
+                    .header("x-goog-api-key", apiKey)
                     .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
                     .build();
 
@@ -80,7 +79,7 @@ public class gemini_generation {
             // Step 5: Check for errors and parse the response.
             if (response.statusCode() != 200) {
                 System.err.println("Gemini API Error: " + response.body());
-                return "§cError: Received an error from the API (Code: " + response.statusCode() + ")";
+                return "§cError: Received an error from the API (Code: " + response.statusCode() + response.body() + ")";
             }
             LOGGER.info(parseResponse(response.body()));
 

@@ -3,7 +3,7 @@
 build/
 run/
 out/
-gradle.properties
+gradle/
 
 # IntelliJ / VSCode
 .idea/

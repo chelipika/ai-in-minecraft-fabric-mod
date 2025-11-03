@@ -10,6 +10,7 @@ public class GeminiConfigManager {
     // Get the path to .minecraft/config/wikki.properties
     private static final Path CONFIG_FILE = MinecraftClient.getInstance().runDirectory.toPath().resolve("config").resolve("wikki.properties");
     private static final Path INSTRUCTIONS_FILE = MinecraftClient.getInstance().runDirectory.toPath().resolve("instuctions").resolve("wikki.properties");
+    private static final Path MODEL_NAME = MinecraftClient.getInstance().runDirectory.toPath().resolve("model_name").resolve("wikki.properties");
     // Saves the API key to the file
     public static void saveApiKey(String apiKey) {
         try {
@@ -51,7 +52,7 @@ public class GeminiConfigManager {
             // Write the key in a simple "key=value" format
             Files.writeString(INSTRUCTIONS_FILE, "GEMINI_INSTRUCTIONS=" + instructions);
         } catch (IOException e) {
-            System.err.println("Failed to save Gemini API key:");
+            System.err.println("Failed to save Gemini custom instructios:");
             e.printStackTrace();
         }
     }
@@ -73,6 +74,40 @@ public class GeminiConfigManager {
             }
         } catch (IOException e) {
             System.err.println("Failed to load Model Instructions:");
+            e.printStackTrace();
+        }
+        return ""; // Return empty if key not found or on error
+    }
+    // likewise saveApiKey
+    public static void saveModelName(String model_name) {
+        try {
+            // Ensure the config directory exists
+            Files.createDirectories(MODEL_NAME.getParent());
+            // Write the key in a simple "key=value" format
+            Files.writeString(MODEL_NAME, "MODEL_NAME=" + model_name);
+        } catch (IOException e) {
+            System.err.println("Failed to save Gemini model name:");
+            e.printStackTrace();
+        }
+    }
+
+
+    // Loads the ModelInstructions key from the file
+    public static String loadModelName() {
+        if (!Files.exists(MODEL_NAME)) {
+            return "gemini-2.5-flash"; // Return default free model if the file doesn't exist
+        }
+
+        try {
+            for (String line : Files.readAllLines(MODEL_NAME)) {
+                // Find the line starting with our key
+                if (line.startsWith("MODEL_NAME=")) {
+                    // Return the value part of the "key=value" pair
+                    return line.substring("MODEL_NAME=".length());
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to load Model Name:");
             e.printStackTrace();
         }
         return ""; // Return empty if key not found or on error
