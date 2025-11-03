@@ -1,6 +1,6 @@
 package com.pi.wikki;
 
-// Make sure to import both of your screen classes
+
 import com.pi.wikki.client.gui.CustomScreen;
 import com.pi.wikki.client.gui.GeminiConfigScreen;
 
@@ -15,7 +15,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class WikkiClient implements ClientModInitializer {
 
-    // --- YOUR FIX INCORPORATED: Create a single, reusable category ---
+
     // This is the best practice. Well done!
     private static final KeyBinding.Category WIKKI_CATEGORY = KeyBinding.Category
             .create(Identifier.of("wikki", "key.category.wikki"));

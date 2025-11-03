@@ -11,7 +11,7 @@ import net.minecraft.text.Text;
 public class GeminiConfigScreen extends Screen {
     // 1. Declare the field here, but DO NOT initialize it yet.
     private TextFieldWidget apiKeyField;
-
+    private TextFieldWidget modelInstructionsField;
     // We store the parent screen to return to it, although we are closing it for now.
     // It's good practice in case you want a "Back" button later.
     public GeminiConfigScreen(Text title) {
@@ -37,25 +37,38 @@ public class GeminiConfigScreen extends Screen {
                 20,         // Height
                 Text.literal("Paste your Gemini API Key here...")
         );
-
+        this.modelInstructionsField = new TextFieldWidget(
+                this.textRenderer,
+                textFieldX, // Use the new centered X position
+                100,         // Y position (moved down a bit for space)
+                textFieldWidth, // Use the new, much wider width
+                20,         // Height
+                Text.literal("You are a helpful assistant...")
+        );
         this.apiKeyField.setMaxLength(128);
-        // Load the currently saved API key into the text field
+        this.modelInstructionsField.setMaxLength(999);
+        // Load the currently saved API key and Model Instructions into the text field
         this.apiKeyField.setText(GeminiConfigManager.loadApiKey());
         this.addDrawableChild(this.apiKeyField);
+
+        this.modelInstructionsField.setText(GeminiConfigManager.loadModelInstructions());
+        this.addDrawableChild(this.modelInstructionsField);
 
         // Set the focus so the player can start typing immediately
         this.setInitialFocus(this.apiKeyField);
 
         // --- SAVE BUTTON ---
         this.addDrawableChild(ButtonWidget.builder(Text.literal("Save and Close"), button -> {
+            String newModelInstructions = this.modelInstructionsField.getText();
             String newApiKey = this.apiKeyField.getText();
+            GeminiConfigManager.saveModelInstructions(newModelInstructions);
             GeminiConfigManager.saveApiKey(newApiKey);
 
             if (this.client != null && this.client.player != null) {
                 this.client.player.sendMessage(Text.literal("§aGemini API Key saved!"), false);
             }
             this.close(); // Close the screen after saving
-        }).dimensions(this.width / 2 - 75, 90, 150, 20).build()); // Centered the button
+        }).dimensions(this.width / 2 - 75, 130, 150, 20).build()); // Centered the button
     }
 
     @Override

@@ -30,41 +30,50 @@ public class gemini_generation {
     public String Generate_content(String userInput) {
         // Step 1: Load the user's API key.
         String apiKey = GeminiConfigManager.loadApiKey();
+        String modelInstructoins = GeminiConfigManager.loadModelInstructions();
         if (apiKey == null || apiKey.trim().isEmpty()) {
-            return "§cError: Your Gemini API Key is not set. Please use the /geminiconfig command to set it.";
+            return "§cError: Your Gemini API Key is not set. Please press the G button(or set your key binding in settings) to set it.";
         }
 
         try {
-            // Step 2: Create the JSON payload with system instructions.
-            // The system instruction tells the AI its role.
+            // Make sure you have loaded your model instructions from the config
+            // I'm assuming you have a variable named 'modelInstructions' with the loaded data.
+            // And 'userInput' is the player's chat message.
+            // And 'apiKey' is the loaded API key.
+
+            // Step 1: CORRECTLY format the JSON payload with BOTH strings.
             String jsonPayload = """
-            {
-              "systemInstruction": {
-                "parts": [
-                  { "text": "You are a helpful assistant integrated into the game Minecraft. Your name is Wikki. Answer all questions from the perspective of being inside the Minecraft world. Keep your answers concise, short, straightforward, friendly, and useful for a who is currently playing the game." }
-                ]
-              },
-              "contents": [
                 {
-                  "role": "user",
-                  "parts": [
-                    { "text": "%s" }
+                  "systemInstruction": {
+                    "parts": [
+                      { "text": "%s" }
+                    ]
+                  },
+                  "contents": [
+                    {
+                      "role": "user",
+                      "parts": [
+                        { "text": "%s" }
+                      ]
+                    }
                   ]
                 }
-              ]
-            }
-            """.formatted(escapeJson(userInput)); // Use formatted() and a helper to safely insert user input.
+                """.formatted(
+                    escapeJson(modelInstructoins), // First %s gets the model instructions
+                    escapeJson(userInput)        // Second %s gets the user's message
+            );
 
 
-            // Step 3: Build the HTTP request.
+            // Step 2: Build the HTTP request WITHOUT the incorrect header.
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(API_URL))
                     .header("Content-Type", "application/json")
-                    .header("x-goog-api-key", apiKey) // Use the loaded API key here.
+                    .header("x-goog-api-key", apiKey) // This is correct
+                    // DELETE the custom header line. The instructions are now in the JSON.
                     .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
                     .build();
 
-            // Step 4: Send the request and get the response.
+
             // The .send() method is synchronous (blocking), which is why we run this whole method on a background thread.
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
