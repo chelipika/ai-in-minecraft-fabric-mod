@@ -44,5 +44,6 @@ Clone the repository and build with Gradle:
 
 ```bash
 git clone https://github.com/chelipika/ai-in-minecraft-fabric-mod.git
-cd wikki
+cd ai-in-minecraft-fabric-mod
+gradle wrapper
 ./gradlew build
