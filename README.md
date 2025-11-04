@@ -5,7 +5,7 @@ You can talk, ask questions, and get detailed responses without leaving the game
 
 ---
 
-[![Watch the video](https://img.youtube.com/vi/xkabQ-9BooI/0.jpg)](https://www.youtube.com/watch?v=xkabQ-9BooI)
+[![Watch the video](https://img.youtube.com/vi/6ZtUkz1nwKQ/0.jpg)](https://www.youtube.com/watch?v=6ZtUkz1nwKQ)
 
 ---
 
