@@ -3,6 +3,7 @@ package com.pi.wikki.client.gui;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
@@ -10,9 +11,14 @@ import java.util.List;
 
 public class MessageDisplayScreen extends Screen {
     private static final int LINE_HEIGHT = 12;
+    // Define margins to make code cleaner
+    private static final int TOP_MARGIN = 30;
+    private static final int BOTTOM_MARGIN = 30;
+    private static final int SIDE_MARGIN = 20;
 
     private final String fullMessage;
-    private List<String> lines = new ArrayList<>();
+    // --- CHANGE 1: Changed the list type from String to OrderedText ---
+    private List<OrderedText> lines = new ArrayList<>();
     private int scrollOffset = 0;
 
     private ButtonWidget backButton;
@@ -20,12 +26,14 @@ public class MessageDisplayScreen extends Screen {
 
     public MessageDisplayScreen(String message) {
         super(Text.literal("Gemini Response"));
+        System.out.println("[DEBUG] Gemini Raw Message: " + message);
         this.fullMessage = message == null ? "(empty response)" : message;
     }
 
     @Override
     protected void init() {
-        this.lines = wrapText(this.fullMessage, this.width - 20);
+        int wrapWidth = this.width - (SIDE_MARGIN * 2);
+        this.lines = wrapText(this.fullMessage, wrapWidth);
 
         this.backButton = this.addDrawableChild(ButtonWidget.builder(Text.literal("Back"), b -> {
             if (this.client != null) this.client.setScreen(null);
@@ -37,62 +45,50 @@ public class MessageDisplayScreen extends Screen {
             }
         }).dimensions(this.width / 2 + 40, this.height - 25, 60, 20).build());
 
+        this.scrollOffset = 0;
         System.out.println("[DEBUG] Gemini lines = " + lines.size());
+    }
+
+    private int getVisibleLines() {
+        int textHeight = this.height - TOP_MARGIN - BOTTOM_MARGIN;
+        return textHeight / LINE_HEIGHT;
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontal, double vertical) {
-        int maxScroll = Math.max(0, lines.size() - ((this.height - 60) / LINE_HEIGHT));
-        scrollOffset = (int) Math.max(0, Math.min(maxScroll, scrollOffset - vertical));
+        int maxScroll = Math.max(0, this.lines.size() - getVisibleLines());
+        this.scrollOffset = (int) Math.max(0, Math.min(maxScroll, this.scrollOffset - vertical));
         return true;
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        // Dark transparent background
-        context.fill(0, 0, this.width, this.height, 0xAA000000);
+        // DO NOT call this.renderBackground() here. It's done automatically.
 
-        // Lazy init fallback
-        if (lines == null || lines.isEmpty()) {
-            lines = wrapText(fullMessage, this.width - 20);
-        }
-
-        // Draw each visible line
-        int y = 20;
-        int visibleLines = (this.height - 60) / LINE_HEIGHT;
-        for (int i = 0; i < visibleLines && (i + scrollOffset) < lines.size(); i++) {
-            String line = lines.get(i + scrollOffset);
-            // Make sure alpha is full (0xFFFFFFFF)
-            context.drawText(this.textRenderer, line, 10, y, 0xFFFFFFFF, false);
+        // 1. Draw your custom content (the text)
+        int y = TOP_MARGIN;
+        int visibleLineCount = getVisibleLines();
+        for (int i = 0; i < visibleLineCount && (i + this.scrollOffset) < this.lines.size(); i++) {
+            OrderedText line = this.lines.get(i + this.scrollOffset);
+            context.drawTextWithShadow(this.textRenderer, line, SIDE_MARGIN, y, 0xFFFFFFFF);
             y += LINE_HEIGHT;
         }
 
+        // 2. Draw the widgets (buttons, etc.) on top of everything.
         super.render(context, mouseX, mouseY, delta);
     }
 
-    private List<String> wrapText(String text, int maxWidth) {
-        List<String> out = new ArrayList<>();
-        if (text == null || text.isEmpty()) return out;
-
-        String[] paragraphs = text.split("\n");
-        for (String para : paragraphs) {
-            String[] words = para.split(" ");
-            StringBuilder line = new StringBuilder();
-
-            for (String word : words) {
-                String test = line + word + " ";
-                if (this.textRenderer.getWidth(test) > maxWidth) {
-                    out.add(line.toString());
-                    line = new StringBuilder(word).append(" ");
-                } else {
-                    line.append(word).append(" ");
-                }
-            }
-            if (!line.isEmpty()) out.add(line.toString());
-            out.add(""); // blank between paragraphs
+    /**
+     * Correctly wraps text using the TextRenderer's built-in functionality.
+     * This now returns a List<OrderedText> which is the native format for rendering.
+     */
+    // --- CHANGE 3: Changed the method's return type ---
+    private List<OrderedText> wrapText(String text, int maxWidth) {
+        if (text == null || text.isEmpty() || this.textRenderer == null) {
+            return new ArrayList<>();
         }
-
-        return out;
+        // No stream/map needed. Just return the list directly.
+        return this.textRenderer.wrapLines(Text.literal(text), maxWidth);
     }
 
     @Override
