@@ -1,5 +1,6 @@
 package com.pi.wikki.client.gui;
 
+import com.pi.wikki.GeminiConfigManager;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -9,7 +10,10 @@ import net.minecraft.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class MessageDisplayScreen extends Screen {
+    private int BG_COLOR;
     private static final int LINE_HEIGHT = 12;
     // Define margins to make code cleaner
     private static final int TOP_MARGIN = 30;
@@ -47,6 +51,9 @@ public class MessageDisplayScreen extends Screen {
 
         this.scrollOffset = 0;
         System.out.println("[DEBUG] Gemini lines = " + lines.size());
+        String bbgsdfk = GeminiConfigManager.loadBgColor().substring(2,10); // FFFFA600
+        System.out.println(bbgsdfk);
+        BG_COLOR = Integer.parseUnsignedInt(bbgsdfk,16);
     }
 
     private int getVisibleLines() {
@@ -64,7 +71,7 @@ public class MessageDisplayScreen extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         // DO NOT call this.renderBackground() here. It's done automatically.
-
+//        context.fill(0, 0, this.width, this.height, BG_COLOR);
         // 1. Draw your custom content (the text)
         int y = TOP_MARGIN;
         int visibleLineCount = getVisibleLines();

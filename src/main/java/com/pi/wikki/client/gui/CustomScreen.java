@@ -48,6 +48,12 @@ public class CustomScreen extends Screen {
 
     @Override
     public boolean keyPressed(KeyInput input) {
+        // leave the screen if ESC is pressed
+        if (input.key() == GLFW.GLFW_KEY_ESCAPE){
+            return super.keyPressed(input);
+        }
+
+
         // Check for Enter or Numpad Enter
         if (this.questionTextField.isFocused() &&
                 (input.key() == GLFW.GLFW_KEY_ENTER || input.key() == GLFW.GLFW_KEY_KP_ENTER)) {
@@ -75,8 +81,6 @@ public class CustomScreen extends Screen {
         if (userInput.isBlank() || this.client == null || this.client.player == null) {
             return; // Don't do anything if there's no input
         }
-
-        String playerName = this.client.player.getName().getString();
 
         // Give immediate feedback and close the screen
         this.client.player.sendMessage(Text.literal("§7Asking Gemini... please wait."), false);

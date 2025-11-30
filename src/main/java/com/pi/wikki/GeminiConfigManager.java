@@ -11,6 +11,7 @@ public class GeminiConfigManager {
     private static final Path CONFIG_FILE = MinecraftClient.getInstance().runDirectory.toPath().resolve("config").resolve("wikki.properties");
     private static final Path INSTRUCTIONS_FILE = MinecraftClient.getInstance().runDirectory.toPath().resolve("instuctions").resolve("wikki.properties");
     private static final Path MODEL_NAME = MinecraftClient.getInstance().runDirectory.toPath().resolve("model_name").resolve("wikki.properties");
+    private static final Path MSG_BG_COLOR = MinecraftClient.getInstance().runDirectory.toPath().resolve("msg_bg_color").resolve("wikki.properties");
     // Saves the API key to the file
     public static void saveApiKey(String apiKey) {
         try {
@@ -111,5 +112,35 @@ public class GeminiConfigManager {
             e.printStackTrace();
         }
         return ""; // Return empty if key not found or on error
+    }
+    // likewise saveApiKey
+    public static void saveBgColor(String color) {
+        try {
+            // Ensure the config directory exists
+            Files.createDirectories(MSG_BG_COLOR.getParent());
+            // Write the key
+            Files.writeString(MSG_BG_COLOR, color);
+        } catch (IOException e) {
+            System.err.println("Failed to save MSG_DISPLAY_COLOR:");
+            e.printStackTrace();
+        }
+    }
+
+
+    // Loads the ModelInstructions key from the file
+    public static String loadBgColor() {
+        if (!Files.exists(MSG_BG_COLOR)) {
+            return "0xFFFFFFFF"; // Return default color if the file doesn't exist
+        }
+
+        try {
+            for (String line : Files.readAllLines(MSG_BG_COLOR)) {
+                return line;
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to load Message_display_color:");
+            e.printStackTrace();
+        }
+        return "0xFFFFFFFF"; // Return empty if key not found or on error
     }
 }
